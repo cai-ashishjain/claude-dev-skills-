@@ -60,24 +60,53 @@ function install({ id, source }) {
   }
 }
 
+// ui-ux-pro-max runs Python 3 scripts (no extra packages) for its style,
+// palette and UX-rule search. Try the same commands the skill itself tries.
+// Each candidate is actually run, because on Windows `python` can be a
+// Microsoft Store placeholder that exists but only prints "Python was not found".
+function hasPython3() {
+  const candidates = [['python', '--version'], ['python3', '--version'], ['py', '-3', '--version']]
+  return candidates.some(([cmd, ...args]) => {
+    try {
+      const out = execFileSync(cmd, args, {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+        timeout: 10_000,
+      })
+      return /^Python 3\./.test(out.trim())
+    } catch {
+      return false
+    }
+  })
+}
+
+const PYTHON_NOTE =
+  '[project plugins] Python 3 not found. ui-ux-pro-max skills still give advice, but their ' +
+  'style/palette/UX-rule search will not run. Install Python 3 (Windows: ' +
+  '`winget install Python.Python.3.12`), then restart Claude Code. See README > Prerequisites.'
+
+const lines = []
 try {
   const have = installedNames()
   const missing = PLUGINS.filter((p) => !have.has(nameOf(p.id)))
 
-  if (missing.length === 0) {
-    process.exit(0) // nothing to do; stay silent so the session isn't cluttered
+  if (missing.length > 0) {
+    const results = missing.map((p) => `${p.id}: ${dryRun ? 'would install' : install(p)}`)
+    lines.push(
+      `[project plugins] ${dryRun ? 'Dry run' : 'Set up missing plugins'}:\n  ` +
+        results.join('\n  ') +
+        (dryRun
+          ? ''
+          : '\nInstalled plugins load from the next session (restart Claude Code).' +
+            '\nWhat each skill does: docs/claude-skills.md'),
+    )
   }
-
-  const results = missing.map((p) => `${p.id}: ${dryRun ? 'would install' : install(p)}`)
-  console.log(
-    `[project plugins] ${dryRun ? 'Dry run' : 'Set up missing plugins'}:\n  ` +
-      results.join('\n  ') +
-      (dryRun
-        ? ''
-        : '\nInstalled plugins load from the next session (restart Claude Code).' +
-          '\nWhat each skill does: docs/claude-skills.md'),
-  )
 } catch (err) {
-  console.log(`[project plugins] Skipped plugin setup: ${String(err.message).split('\n')[0]}`)
+  lines.push(`[project plugins] Skipped plugin setup: ${String(err.message).split('\n')[0]}`)
 }
+
+// One line per session while Python is missing; silent once it's installed.
+if (!hasPython3()) lines.push(PYTHON_NOTE)
+
+if (lines.length > 0) console.log(lines.join('\n'))
 process.exit(0)

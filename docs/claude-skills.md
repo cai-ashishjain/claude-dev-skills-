@@ -60,15 +60,17 @@ Everything below is reference. Skim the plugin you need.
 </details>
 
 <details>
-<summary><b>ui-ux-pro-max</b>: UI/UX reference data and design production · 7 skills</summary>
+<summary><b>ui-ux-pro-max</b>: UI/UX reference data and design production · 7 skills · <b>needs Python 3</b></summary>
+
+🐍 = uses Python 3 for part of its work (see [Extra setup](#extra-setup-some-skills-need)).
 
 | Skill | When it's used |
 |---|---|
-| `ui-ux-pro-max` | Designing, building or reviewing interfaces; searches built-in styles, palettes, font pairings and UX guidelines |
-| `ui-styling` | Building UI with shadcn/ui + Tailwind (components, responsive layouts, dark mode) |
-| `design-system` | Design tokens (primitive → semantic → component) and component specs |
+| `ui-ux-pro-max` 🐍 | Designing, building or reviewing interfaces; searches built-in styles, palettes, font pairings and 141 UX rules |
+| `ui-styling` 🐍 | Building UI with shadcn/ui + Tailwind (components, responsive layouts, dark mode) |
+| `design-system` 🐍 | Design tokens (primitive → semantic → component) and component specs |
+| `design` 🐍 | Logos, icons, corporate identity, social images *(image generation also needs an API key)* |
 | `brand` | Brand voice, visual identity, style guides |
-| `design` | Logos, icons, corporate identity, social images *(image generation needs setup, see below)* |
 | `banner-design` | Banners for social media, ads, website heroes and print |
 | `slides` | HTML presentations with charts |
 
@@ -88,9 +90,11 @@ Everything below is reference. Skim the plugin you need.
 
 ## Extra setup some skills need
 
-- **Python 3**: required by `ui-ux-pro-max` (its style/palette search), and used by
-  `design`, `design-system` and `ui-styling`. Without it, Claude can still give advice,
-  but the built-in search won't run. Check with `python --version`.
+- **Python 3** (no extra packages): a prerequisite for the 🐍 skills above. It powers
+  `ui-ux-pro-max`'s search over its style, palette and UX-rule data, which is the main
+  reason to have that plugin. Without it, those skills still give advice from their written
+  rules, but the search won't run, and the setup hook reminds you at each session start.
+  Install and check steps: README > Prerequisites.
 - **Image generation in `design`** (logos, icons): needs an API key such as
   `GEMINI_API_KEY` plus `pip install google-genai pillow`. Optional; skip it unless you need
   generated images. Never commit API keys.

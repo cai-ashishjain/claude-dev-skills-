@@ -82,6 +82,18 @@ export default defineConfig([
 This repo sets up the team's Claude Code plugins for you:
 `superpowers`, `frontend-design`, `ui-ux-pro-max` and `modern-web-guidance`.
 
+### Prerequisites
+
+| Need | Why | Check |
+|---|---|---|
+| **Node.js** | runs the plugin setup hook (you already need it for this Vite app) | `node --version` |
+| **Python 3** (no extra packages) | `ui-ux-pro-max` uses it to search its built-in styles, palettes and UX rules | `python --version` should print `Python 3.x` |
+
+Installing Python on Windows: `winget install Python.Python.3.12`, then open a new terminal.
+On Windows, `python` can print "Python was not found" even though the command exists.
+That means Python is **not** installed. Without Python, everything else still works;
+the hook prints a one-line reminder at session start until it's installed.
+
 1. Open Claude Code in this folder and accept the "trust this folder" prompt.
 2. On session start, a hook (`.claude/scripts/install-plugins.mjs`) installs any
    of these plugins you don't already have. The first run takes about a minute.
