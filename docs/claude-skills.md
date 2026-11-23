@@ -1,6 +1,6 @@
 # Claude Code skills in this repo
 
-After setup (see the README), you have 4 plugins with 25 skills.
+If you installed the optional team plugins (see the README), you have 4 plugins with 25 skills.
 **You don't need to learn them.** Claude picks the right skill on its own when your
 request matches it. This page is for when you want to know what's there or call one
 directly.

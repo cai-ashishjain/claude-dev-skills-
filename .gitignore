@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code: per-person settings and plugin choice
+.claude/settings.local.json
+.claude/team-plugins.local
