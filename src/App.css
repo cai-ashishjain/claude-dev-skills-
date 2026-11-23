@@ -182,3 +182,25 @@
     border-right-color: var(--border);
   }
 }
+
+.counter-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  .counter {
+    margin-bottom: 0;
+    min-width: 36px;
+    justify-content: center;
+  }
+}
+
+.counter-value {
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--text-h);
+  cursor: default;
+  user-select: none;
+  caret-color: transparent;
+}
