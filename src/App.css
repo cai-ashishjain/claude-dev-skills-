@@ -193,6 +193,7 @@
     margin-bottom: 0;
     min-width: 36px;
     justify-content: center;
+    cursor: pointer;
   }
 }
 
