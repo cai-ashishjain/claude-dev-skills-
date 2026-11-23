@@ -76,3 +76,24 @@ export default defineConfig([
 ])
 
 ```
+
+## Claude Code plugins
+
+This repo sets up the team's Claude Code plugins for you:
+`superpowers`, `frontend-design`, `ui-ux-pro-max` and `modern-web-guidance`.
+
+1. Open Claude Code in this folder and accept the "trust this folder" prompt.
+2. On session start, a hook (`.claude/scripts/install-plugins.mjs`) installs any
+   of these plugins you don't already have. The first run takes about a minute.
+3. Restart Claude Code. The plugins load from the next session.
+
+Notes:
+- If you already have one of these plugins from another source (for example
+  `superpowers` synced from claude.ai), it is not installed again.
+- If Claude Code then warns that `<name>@claude-plugins-official` "isn't installed",
+  add `"<name>@claude-plugins-official": false` under `enabledPlugins` in your
+  untracked `.claude/settings.local.json` to keep using your existing copy.
+- You can also run the setup by hand: `node .claude/scripts/install-plugins.mjs`
+  (add `--dry-run` to only list what is missing).
+- To add a plugin for everyone, add it to `enabledPlugins` in `.claude/settings.json`
+  **and** to the `PLUGINS` list in the script.
