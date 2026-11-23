@@ -72,7 +72,10 @@ try {
   console.log(
     `[project plugins] ${dryRun ? 'Dry run' : 'Set up missing plugins'}:\n  ` +
       results.join('\n  ') +
-      (dryRun ? '' : '\nInstalled plugins load from the next session (restart Claude Code).'),
+      (dryRun
+        ? ''
+        : '\nInstalled plugins load from the next session (restart Claude Code).' +
+          '\nWhat each skill does: docs/claude-skills.md'),
   )
 } catch (err) {
   console.log(`[project plugins] Skipped plugin setup: ${String(err.message).split('\n')[0]}`)

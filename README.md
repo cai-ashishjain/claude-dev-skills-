@@ -87,6 +87,8 @@ This repo sets up the team's Claude Code plugins for you:
    of these plugins you don't already have. The first run takes about a minute.
 3. Restart Claude Code. The plugins load from the next session.
 
+**What each skill does and how to use it:** [docs/claude-skills.md](docs/claude-skills.md)
+
 Notes:
 - If you already have one of these plugins from another source (for example
   `superpowers` synced from claude.ai), it is not installed again.
