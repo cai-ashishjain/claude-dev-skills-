@@ -1,0 +1,57 @@
+name: Update visual baselines (Linux)
+
+# Regenerates the Linux screenshots in the same container CI uses and commits
+# any changed images back to the branch. Two ways to start it:
+#   - On a PR: add the label "update-screenshots" (works before this file is on dev).
+#   - Manually: Actions tab -> this workflow -> "Run workflow" (only once on dev).
+# Use it once to create the first *-linux.png baselines, and after an intended
+# visual change to accept the new look. Note: commits pushed by this workflow do
+# not trigger other workflows, so re-run the "Visual regression" check afterwards.
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: visual-baselines-${{ github.head_ref || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-screenshots'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.65.1-noble
+    steps:
+      - name: Ensure git is available
+        run: command -v git || (apt-get update && apt-get install -y --no-install-recommends git)
+
+      - uses: actions/checkout@v7
+        with:
+          # On a PR, check out the PR branch itself (not the merge commit) so we can push to it.
+          ref: ${{ github.head_ref || github.ref }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate Linux baselines
+        run: npx playwright test --update-snapshots
+
+      - name: Commit changed baselines
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/visual/__screenshots__
+          if git diff --cached --quiet; then
+            echo "Baselines already up to date; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Update Linux visual baselines"
+          git push origin "HEAD:${TARGET_BRANCH}"
+        env:
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}

@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "test:visual:report": "playwright show-report"
   },
   "dependencies": {
     "react": "^19.3.1",
@@ -16,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.65.1",
     "@rolldown/plugin-babel": "^0.3.0",
     "@types/babel__core": "^7.20.5",
     "@types/node": "^24.19.2",
