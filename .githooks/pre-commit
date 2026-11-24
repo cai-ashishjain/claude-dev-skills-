@@ -1,0 +1,42 @@
+#!/bin/sh
+# Guard: block a commit if any component's appearance changed compared to its
+# approved screenshot baseline (tests/visual), or a behavior test fails (tests/e2e).
+# Enabled by `npm install` (the "prepare" script sets core.hooksPath).
+# Skip once with: git commit --no-verify
+
+# Only run when something that can affect the UI is staged.
+if ! git diff --cached --name-only --diff-filter=ACMRD | grep -qE '^(src/|public/|index\.html|tests/|playwright\.config\.ts)'; then
+  exit 0
+fi
+
+echo "pre-commit: UI files staged, running visual + behavior tests..."
+
+if npx playwright test --reporter=line; then
+  echo "pre-commit: all visual and behavior tests passed."
+  exit 0
+fi
+
+cat <<'EOF'
+
+pre-commit: COMMIT BLOCKED. See the failures listed above.
+
+  BEHAVIOR failures (tests/e2e/...): something no longer works as expected
+  (e.g. a button or link). Fix the code and commit again.
+
+  VISUAL failures (tests/visual/...): those components look different from
+  their approved baselines.
+
+  See details, before/after/diff:   npm run test:visual:report
+
+  If ONLY the component you meant to change is listed, accept its new look:
+      npm run test:visual:update -- -g "counter"     (use its name from the list)
+      git add tests/visual
+      git commit ...
+
+  If OTHER components are listed too, your CSS changed them indirectly:
+  fix the CSS and commit again.
+
+  Note: the check uses your working tree, so unstaged edits count too.
+  Skip once (not recommended): git commit --no-verify
+EOF
+exit 1

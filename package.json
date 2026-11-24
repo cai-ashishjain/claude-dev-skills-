@@ -8,9 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots",
-    "test:visual:report": "playwright show-report"
+    "test:visual": "playwright test tests/visual",
+    "test:visual:update": "playwright test tests/visual --update-snapshots",
+    "test:visual:report": "playwright show-report",
+    "prepare": "git config core.hooksPath .githooks",
+    "test:visual:ui": "playwright test --ui",
+    "test": "playwright test",
+    "test:e2e": "playwright test tests/e2e",
+    "test:headed": "playwright test tests/e2e --headed --project=desktop-light --workers=1"
   },
   "dependencies": {
     "react": "^19.3.1",

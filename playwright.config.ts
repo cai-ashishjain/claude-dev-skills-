@@ -2,14 +2,19 @@ import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 5179
 
-// Visual regression tests: screenshot each component and diff against the
-// stored baseline. Baselines live in tests/visual/__screenshots__ and are
-// platform-specific (fonts render differently on Windows/macOS/Linux), so
-// create and check them on the same OS / CI image.
+// Two suites, both in a real browser:
+//  - tests/visual: screenshot each component and diff against the stored
+//    baseline. Baselines live in tests/visual/__screenshots__ and are
+//    platform-specific (fonts render differently on Windows/macOS/Linux), so
+//    create and check them on the same OS / CI image.
+//  - tests/e2e: behavior checks (click, type, assert text/attributes).
+//    Color scheme doesn't affect behavior, so they run in the light projects only.
+const E2E_ONLY_IN_LIGHT = '**/e2e/**'
+
 export default defineConfig({
-  testDir: './tests/visual',
+  testDir: './tests',
   snapshotPathTemplate:
-    '{testDir}/__screenshots__/{projectName}/{arg}-{platform}{ext}',
+    '{testDir}/{testFileDir}/__screenshots__/{projectName}/{arg}-{platform}{ext}',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
@@ -36,6 +41,7 @@ export default defineConfig({
     {
       name: 'desktop-dark',
       use: { ...devices['Desktop Chrome'], colorScheme: 'dark' },
+      testIgnore: E2E_ONLY_IN_LIGHT,
     },
     {
       name: 'mobile-light',
@@ -44,6 +50,7 @@ export default defineConfig({
     {
       name: 'mobile-dark',
       use: { ...devices['Pixel 7'], colorScheme: 'dark' },
+      testIgnore: E2E_ONLY_IN_LIGHT,
     },
   ],
   webServer: {
