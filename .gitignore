@@ -23,8 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
 # Playwright
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Claude Code: per-person settings and plugin choice
+.claude/settings.local.json
+.claude/team-plugins.local
